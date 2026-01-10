@@ -1,0 +1,214 @@
+import tkinter as tk
+import tkinter.messagebox
+import math
+from fractions import Fraction
+class myGUI:
+    def __init__(self):
+        title="The relationship between 2 lines"
+        title=title.upper()
+        self.main_window = tk.Tk()
+        self.main_window.title("Relationship Between Two Lines")
+        self.main_window.configure(bg='lightblue')
+        self.top_frame = tkinter.Frame()
+        self.mid_frame = tkinter.Frame()
+        self.bottom_frame = tkinter.Frame()
+        self.title = tkinter.Label(self.top_frame, text=f"{title}\n ", font=("Georgia", 12, 'bold'))
+        self.line1label = tkinter.Label(self.top_frame, text="Enter the equation of the first line in the form y=mx+b, exclude y=")
+        self.line2label = tkinter.Label(self.mid_frame, text="Enter the equation of the second line in the form y=mx+b, exclude y=")
+        self.line1prompt = tkinter.Entry(self.top_frame)
+        self.line2prompt = tkinter.Entry(self.mid_frame)
+        self.my_button = tkinter.Button(self.mid_frame, text="Draw lines", command=self.calculate)
+        self.info_button = tkinter.Button(self.main_window, text="Info", command=self.information)
+        self.top_frame.pack(side="top")
+        self.mid_frame.pack()
+        self.bottom_frame.pack(side="bottom")
+        self.top_frame.configure(bg='lightblue')
+        self.mid_frame.configure(bg='lightblue')
+        self.bottom_frame.configure(bg='lightblue')
+        self.line1label.configure(bg='lightblue')
+        self.line2label.configure(bg='lightblue')
+        self.my_button.configure(bg='deepskyblue')
+        self.info_button.configure(bg='deepskyblue')
+        self.line1prompt.configure(bg='lightskyblue')
+        self.line2prompt.configure(bg='lightskyblue')
+        self.title.configure(bg="lightblue")
+        self.title.pack()
+        self.line1label.pack()
+        self.line2label.pack()
+        self.line1prompt.pack()
+        self.line2prompt.pack()
+        self.my_button.pack()
+        self.info_button.pack(side="left", anchor="s", padx=10, pady=10)
+        tk.mainloop()
+    def information(self):
+        tkinter.messagebox.showinfo("Information", "The math problem that this program is solving is determining the relationship between two lines. \n\nIt gives the point of intersection by setting both equations equal to each other. \n\nIt finds the angle between the two lines using the formula \n\n arctan(|(m1-m2)/(1+m1*m2)|) \n\nIt determine whether the lines are perpendicular or parallel by comparing whether the slopes are negative reciprocals, or the same. \n\nFinally, this program graphs the functions using canvas with the first line created being blue and the second line created being red.")
+    def calculate(self):
+        def checkFraction(bval, indexsign, line, ispositive): # checking whether the b value is a fraction and assigning each value a decimal value accordingly
+            if ispositive==True:
+                sign=1
+            else:
+                sign=0
+            if "/" in line:
+                if line.count("/")==1:
+                    indexval=line.find("/")
+                    indexval=line.find("/", indexval+1)
+                    if indexval!=-1:
+                        bval=int(line[indexsign+sign:len(line)])
+                        return bval
+                    else:
+                        bval=float(Fraction(line[indexsign+sign:len(line)]))
+                        return bval
+                elif line.count("/")==2:
+                    indexval=line.find("/")
+                    indexval=line.find("/", indexval+1)
+                    bval=float(Fraction(line[indexsign+sign:len(line)]))
+                    return bval
+            else:
+                bval=int(line[indexsign+sign:len(line)])
+                return bval
+        line1=str(self.line1prompt.get())
+        line2=str(self.line2prompt.get())
+        index1=line1.find("x")
+        index3=line2.find("x")
+        if "x" in line1: # seeing if it is a linear function or a constant
+            if "+" in line1: # seeing if if it is adding or subtracting b value
+                ispositive1=True
+                index2=line1.find("+")
+                b1=(line1[index2+1:len(line1)])
+                publicb1=b1
+                print(b1,index2,line1,ispositive1)
+                b1=checkFraction(b1, index2, line1, ispositive1)
+                print(b1)
+            if line1.count("-")==1:
+                if line1[0]=="-": # checking if the negative sign is for the slope or the b value and assigning the slope and b values accordingly
+                    ispositive1=False
+                    index2=line1.find("-")
+                    index2=line1.find("-", index2+1)
+                    if index2 != -1:
+                        ispositive1=True
+                        b1=(line1[index2:len(line1)])
+                        publicb1=b1
+                        b1=checkFraction(b1, index2, line1, ispositive1)
+                else:
+                    ispositive1=False
+                    index2=line1.find("-")
+                    b1=(line1[index2:len(line1)])
+                    publicb1=b1
+                    b1=checkFraction(b1, index2, line1, ispositive1)
+            elif line1.count("-")==2:
+                ispositive1=False
+                index2=line1.find("-")
+                index2=line1.find("-", index2+1)
+                b1=(line1[index2:len(line1)])
+                publicb1=b1
+                b1=checkFraction(b1, index2, line1, ispositive1)
+            if "+" not in line1 and "-" not in line1: #seeing if there is a b value, if not then b is 0
+                b1=0
+            if "/" in line1:
+                slope1=float(Fraction(line1[0:index1]))
+                publicslope1=(line1[0:index1])
+            else:
+                slope1=int(line1[0:index1])
+                publicslope1=slope1
+        else:
+            slope1=0
+            publicslope1=slope1
+            b1=int(self.line1prompt.get())
+        if "x" in line2:
+            if "+" in line2:
+                ispositive2=True
+                index4=line2.find("+")
+                b2=(line2[index4+1:len(line2)])
+                publicb2=b2
+                b2=checkFraction(b2, index4, line2, ispositive2)
+            if line2.count("-")==1:
+                if line2[0]=="-":
+                    ispositive2=False
+                    index4=line2.find("-")
+                    index4=line2.find("-", index4+1)
+                    if index4 != -1:
+                        ispositive2=True
+                        b2=(line2[index4:len(line2)])
+                        publicb2=b2
+                        b2=checkFraction(b2, index4, line2, ispositive2)
+                else:
+                    ispositive2=False
+                    index4=line2.find("-")
+                    b2=(line2[index4:len(line2)])
+                    publicb2=b2
+                    b2=checkFraction(b2, index4, line2, ispositive2)
+            elif line2.count("-")==2:
+                ispositive2=False
+                index4=line2.find("-")
+                index4=line2.find("-", index4+1)
+                b2=(line2[index4:len(line2)])
+                publicb2=b2
+                b2=checkFraction(b2, index4, line2, ispositive2)
+            if "+" not in line2 and "-" not in line2:
+                b2=0
+            if "/" in line2:
+                slope2=float(Fraction(line2[0:index3]))
+                publicslope2=(line2[0:index3])
+            else:
+                slope2=int(line2[0:index3])
+                publicslope2=slope2
+        else:
+            slope2=0
+            publicslope2=slope2
+            b2=int(self.line2prompt.get())
+        if slope1==slope2:
+            isparallel=True
+            publicparallel=("are")
+        else:
+            isparallel=False
+            publicparallel=("are not")
+        if slope1==-(1/slope2):
+            isperpendicular=True
+            publicperp=("are")
+        else:
+            isperpendicular=False
+            publicperp=("are not")
+        print(slope1, slope2, b1, b2)
+        x1, x2 = -124, 124
+        y1=(slope1*x1)+b1
+        y2=(slope1*x2)+b1
+        x1c=124+x1
+        y1c=124-y1
+        x2c=124+x2
+        y2c=124-y2
+        x3, x4 = -124, 124
+        y3=(slope2*x3)+b2
+        y4=(slope2*x4)+b2
+        x3c=124+x3
+        y3c=124-y3
+        x4c=124+x4
+        y4c=124-y4
+        if isperpendicular:
+            acute=90
+            obtuse=180-acute
+        elif isparallel:
+            acute=0
+            obtuse=0
+        else:
+            acute=math.ceil(math.atan(math.fabs((slope1-slope2)/(1+slope1*slope2))))
+            obtuse=180-acute
+        if not isparallel:
+            side1=slope1-slope2
+            side2=b2-b1
+            poix=side2/side1
+            poiy=(slope1*poix)+b1
+        new_window=tk.Toplevel(self.main_window)
+        new_window.title=("Graphing Lines")
+        new_window.geometry("250x250")
+        self.canvas = tkinter.Canvas(new_window, width=250, height=250, bg="white")
+        self.canvas.create_line(124, 0, 124, 249)
+        self.canvas.create_line(0, 124, 249, 124)
+        self.canvas.create_line(x1c, y1c, x2c, y2c, fill="blue", width=2)
+        self.canvas.create_line(x3c, y3c, x4c, y4c, fill="red", width=2)
+        self.canvas.pack()
+        tkinter.messagebox.showinfo("Lines", f"The slope of the first line is {publicslope1} and the y intercept is {publicb1} \n The slope of the second line is {publicslope2} and the y intercept is {publicb2} \n The acute angle between them is {acute} and the obtuse angle between them is {obtuse} \n The lines {publicperp} perpendicular \n The lines {publicparallel} parallel")
+        if isparallel:
+            tkinter.messagebox.showinfo("Point of Intersection", f"There is no point of intersection")
+        else:
+            tkinter.messagebox.showinfo("Point of Intersection", f"The point of intersection is ({poix:.2f}, {poiy:.2f})")
+myGUI()
